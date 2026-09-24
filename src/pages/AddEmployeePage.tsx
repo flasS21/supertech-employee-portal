@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { AlertCircle, ArrowLeft } from "lucide-react";
 import EmployeeForm from "../components/EmployeeForm";
 import PageHeader from "../components/PageHeader";
 import { addEmployee } from "../services/employeeService";
@@ -8,6 +9,7 @@ import type { EmployeeFormData } from "../validation/employeeValidation";
 
 export default function AddEmployeePage() {
   const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = (data: EmployeeFormData) => {
     const now = new Date().toISOString();
@@ -17,8 +19,12 @@ export default function AddEmployeePage() {
       createdAt: now,
       updatedAt: now,
     };
-    addEmployee(employee);
-    navigate("/employees");
+    try {
+      addEmployee(employee);
+      navigate("/employees");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to save employee");
+    }
   };
 
   return (
@@ -32,6 +38,16 @@ export default function AddEmployeePage() {
       </Link>
 
       <PageHeader title="Add Employee" subtitle="Create a new employee record" />
+
+      {error && (
+        <div
+          role="alert"
+          className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+        >
+          <AlertCircle className="h-4 w-4 shrink-0" />
+          {error}
+        </div>
+      )}
 
       <EmployeeForm submitLabel="Add Employee" onSubmit={handleSubmit} />
     </div>

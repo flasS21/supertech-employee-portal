@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, User } from "lucide-react";
+import { AlertCircle, ArrowLeft, User } from "lucide-react";
 import { getEmployee, updateEmployee } from "../services/employeeService";
 import EmployeeForm from "../components/EmployeeForm";
 import PageHeader from "../components/PageHeader";
@@ -9,6 +10,7 @@ export default function EditEmployeePage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const employee = getEmployee(id ?? "");
+  const [error, setError] = useState<string | null>(null);
 
   if (!employee) {
     return (
@@ -31,12 +33,16 @@ export default function EditEmployeePage() {
   }
 
   const handleSubmit = (data: EmployeeFormData) => {
-    updateEmployee({
-      ...employee,
-      ...data,
-      updatedAt: new Date().toISOString(),
-    });
-    navigate("/employees");
+    try {
+      updateEmployee({
+        ...employee,
+        ...data,
+        updatedAt: new Date().toISOString(),
+      });
+      navigate("/employees");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to save changes");
+    }
   };
 
   return (
@@ -53,6 +59,16 @@ export default function EditEmployeePage() {
         title="Edit Employee"
         subtitle={`Update details for ${employee.name}`}
       />
+
+      {error && (
+        <div
+          role="alert"
+          className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+        >
+          <AlertCircle className="h-4 w-4 shrink-0" />
+          {error}
+        </div>
+      )}
 
       <EmployeeForm
         initialData={employee}
