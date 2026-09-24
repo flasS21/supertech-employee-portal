@@ -2,30 +2,10 @@ import { Link } from "react-router-dom";
 import { Users } from "lucide-react";
 import type { Employee } from "../models/employee";
 import StatusBadge from "./StatusBadge";
+import { initials, formatDate } from "../utils/format";
 
 interface RecentEmployeesProps {
   employees: Employee[];
-}
-
-function initials(name: string): string {
-  return name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
-}
-
-function formatDate(date: string): string {
-  const parsed = new Date(date);
-  if (Number.isNaN(parsed.getTime())) {
-    return date;
-  }
-  return parsed.toLocaleDateString(undefined, {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
 }
 
 export default function RecentEmployees({ employees }: RecentEmployeesProps) {

@@ -1,6 +1,8 @@
 import type { Employee } from "../models/employee";
 
 const STORAGE_KEY = "supertech_employee_portal_v1";
+const EMPLOYEE_ID_PREFIX = "EMP";
+const EMPLOYEE_ID_PADDING = 4;
 
 interface EmployeeStorage {
   schemaVersion: 1;
@@ -97,4 +99,19 @@ export function updateEmployee(updatedEmployee: Employee): void {
 export function deleteEmployee(id: string): void {
   const employees = getEmployees();
   saveEmployees(employees.filter((employee) => employee.id !== id));
+}
+
+export function nextEmployeeId(): string {
+  const pattern = new RegExp(`^${EMPLOYEE_ID_PREFIX}-(\\d+)$`, "i");
+  const highest = getEmployees().reduce((max, employee) => {
+    const match = employee.employeeId.match(pattern);
+    if (!match) {
+      return max;
+    }
+    const value = Number.parseInt(match[1], 10);
+    return value > max ? value : max;
+  }, 0);
+
+  const next = highest + 1;
+  return `${EMPLOYEE_ID_PREFIX}-${String(next).padStart(EMPLOYEE_ID_PADDING, "0")}`;
 }
