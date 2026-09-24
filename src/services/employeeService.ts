@@ -1,4 +1,5 @@
 import type { Employee } from "../models/employee";
+import { employeeRecordSchema } from "../validation/employeeValidation";
 
 const STORAGE_KEY = "supertech_employee_portal_v1";
 const EMPLOYEE_ID_PREFIX = "EMP";
@@ -31,6 +32,10 @@ function readStorage(): EmployeeStorage {
       !("employees" in parsed) ||
       !Array.isArray(parsed.employees)
     ) {
+      return emptyStorage;
+    }
+
+    if (!parsed.employees.every((record) => employeeRecordSchema.safeParse(record).success)) {
       return emptyStorage;
     }
 

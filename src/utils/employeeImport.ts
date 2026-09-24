@@ -1,13 +1,6 @@
-import { z } from "zod";
 import type { Employee } from "../models/employee";
-import { employeeSchema } from "../validation/employeeValidation";
+import { employeeRecordSchema } from "../validation/employeeValidation";
 import { getEmployees } from "../services/employeeService";
-
-const fullEmployeeSchema = employeeSchema.extend({
-  id: z.string().min(1, "id is required"),
-  createdAt: z.string().min(1, "createdAt is required"),
-  updatedAt: z.string().min(1, "updatedAt is required"),
-});
 
 export interface EmployeeImportResult {
   employees: Employee[];
@@ -39,7 +32,7 @@ export function parseEmployeeImport(content: string): EmployeeImportResult {
 
   raw.forEach((entry, index) => {
     const label = `Row ${index + 1}`;
-    const result = fullEmployeeSchema.safeParse(entry);
+    const result = employeeRecordSchema.safeParse(entry);
     if (!result.success) {
       const detail = result.error.issues[0]?.message ?? "invalid record";
       errors.push(`${label}: ${detail}`);
