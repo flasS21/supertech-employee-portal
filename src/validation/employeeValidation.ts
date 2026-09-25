@@ -34,7 +34,11 @@ export const employeeSchema = z
       .string()
       .trim()
       .min(2, "Name must be at least 2 characters")
-      .max(100, "Name must be 100 characters or less"),
+      .max(100, "Name must be 100 characters or less")
+      .regex(
+        /^[\p{L}]+(?:[ '-][\p{L}]+)*$/u,
+        "Name must contain only letters, spaces, hyphens, and apostrophes",
+      ),
 
     email: z
       .string()
