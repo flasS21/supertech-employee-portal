@@ -4,7 +4,7 @@ import type { EmployeeStatus } from "../models/employee";
 const STATUS_OPTIONS: EmployeeStatus[] = ["Active", "On Leave", "Inactive"];
 
 const selectClass =
-  "h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-600/20 sm:w-auto";
+  "h-10 w-full cursor-pointer appearance-none rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 transition-colors hover:border-brand-400 focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-600/20 sm:w-auto";
 
 interface FilterBarProps {
   departments: string[];

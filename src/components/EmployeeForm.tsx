@@ -24,6 +24,12 @@ function inputClass(hasError: boolean): string {
   return `${baseInputClass} ${hasError ? errorStateClass : normalStateClass}`;
 }
 
+function selectClass(hasError: boolean): string {
+  return `${baseInputClass} cursor-pointer appearance-none transition-colors hover:border-brand-400 ${
+    hasError ? errorStateClass : normalStateClass
+  }`;
+}
+
 function compositeInputClass(hasError: boolean): string {
   return `h-10 min-w-0 flex-1 rounded-l-lg border border-r-0 bg-white pl-3 pr-1 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500 ${
     hasError ? errorStateClass : normalStateClass
@@ -272,7 +278,7 @@ export default function EmployeeForm({
             onChange={(event) => handleDepartmentChange(event.target.value)}
             aria-invalid={Boolean(errors.department)}
             aria-describedby={errors.department ? "department-error" : undefined}
-            className={inputClass(Boolean(errors.department))}
+            className={selectClass(Boolean(errors.department))}
           >
             <option value="" disabled>
               Select department
@@ -305,7 +311,7 @@ export default function EmployeeForm({
             aria-describedby={
               errors.designation ? "designation-error" : undefined
             }
-            className={inputClass(Boolean(errors.designation))}
+            className={selectClass(Boolean(errors.designation))}
           >
             <option value="" disabled>
               {department ? "Select designation" : "Select a department first"}
@@ -356,7 +362,7 @@ export default function EmployeeForm({
             }}
             aria-invalid={Boolean(errors.status)}
             aria-describedby={errors.status ? "status-error" : undefined}
-            className={inputClass(Boolean(errors.status))}
+            className={selectClass(Boolean(errors.status))}
           >
             {STATUS_OPTIONS.map((option) => (
               <option key={option} value={option}>
