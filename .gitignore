@@ -26,6 +26,8 @@ dist-ssr
 # Local development/reference files
 IMPLEMENTATION-PLAN.md
 
+/screenshots
+
 # Environment variables / secrets
 .env
 .env.*
