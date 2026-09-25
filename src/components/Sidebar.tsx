@@ -1,4 +1,5 @@
 import { LayoutDashboard, Users, Settings } from "lucide-react";
+import { Link } from "react-router-dom";
 import { appConfig } from "../config/appConfig";
 import NavItem from "./NavItem";
 
@@ -15,18 +16,19 @@ interface SidebarProps {
 export default function Sidebar({ onNavigate }: SidebarProps) {
   return (
     <aside className="flex h-full w-64 flex-col border-r border-slate-200 bg-white">
-      <div className="flex h-16 items-center gap-3 border-b border-slate-200 px-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-500 text-sm font-bold text-white">
-          ST
-        </div>
-        <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-slate-900">
-            {appConfig.companyName}
-          </p>
-          <p className="truncate text-xs text-slate-500">
-            {appConfig.applicationName}
-          </p>
-        </div>
+      <div className="flex h-16 items-center border-b border-slate-200 px-5">
+        <Link
+          to="/"
+          onClick={onNavigate}
+          aria-label="Go to dashboard"
+          className="block"
+        >
+          <img
+            src="/brand/svg/supertech-fabric-wordmark.svg"
+            alt={appConfig.companyName}
+            className="h-12 w-auto"
+          />
+        </Link>
       </div>
 
       <nav className="flex-1 space-y-1 px-3 py-4">
