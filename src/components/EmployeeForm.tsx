@@ -25,7 +25,7 @@ function inputClass(hasError: boolean): string {
 }
 
 function compositeInputClass(hasError: boolean): string {
-  return `h-10 min-w-0 flex-1 rounded-l-lg border border-r-0 bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500 ${
+  return `h-10 min-w-0 flex-1 rounded-l-lg border border-r-0 bg-white pl-3 pr-1 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500 ${
     hasError ? errorStateClass : normalStateClass
   }`;
 }
@@ -188,29 +188,41 @@ export default function EmployeeForm({
           <label htmlFor="email" className="text-sm font-medium text-slate-700">
             Email
           </label>
-          <div className="mt-1 flex">
-            <input
-              id="email"
-              value={emailUsername}
-              onChange={(event) => {
-                setEmailUsername(event.target.value);
-                clearError("email");
-              }}
-              placeholder="username"
-              autoComplete="off"
-              disabled={isEdit}
-              aria-invalid={Boolean(errors.email)}
-              aria-describedby={errors.email ? "email-error" : undefined}
-              className={compositeInputClass(Boolean(errors.email))}
-            />
-            <span
-              aria-hidden="true"
-              className={`flex h-10 shrink-0 items-center rounded-r-lg border border-l-0 bg-slate-50 px-3 text-sm text-slate-500 ${
-                errors.email ? "border-red-300" : "border-slate-300"
-              }`}
-            >
-              @{emailDomain}
-            </span>
+          <div className={isEdit ? "" : "mt-1 flex"}>
+            {isEdit ? (
+              <input
+                id="email"
+                value={`${emailUsername}@${emailDomain}`}
+                disabled
+                aria-invalid={Boolean(errors.email)}
+                aria-describedby={errors.email ? "email-error" : undefined}
+                className={inputClass(Boolean(errors.email))}
+              />
+            ) : (
+              <>
+                <input
+                  id="email"
+                  value={emailUsername}
+                  onChange={(event) => {
+                    setEmailUsername(event.target.value);
+                    clearError("email");
+                  }}
+                  placeholder="username"
+                  autoComplete="off"
+                  aria-invalid={Boolean(errors.email)}
+                  aria-describedby={errors.email ? "email-error" : undefined}
+                  className={compositeInputClass(Boolean(errors.email))}
+                />
+                <span
+                  aria-hidden="true"
+                  className={`flex h-10 shrink-0 items-center rounded-r-lg border border-l-0 bg-slate-50 pl-0.5 pr-3 text-sm text-slate-500 ${
+                    errors.email ? "border-red-300" : "border-slate-300"
+                  }`}
+                >
+                  @{emailDomain}
+                </span>
+              </>
+            )}
           </div>
           {errorText("email")}
         </div>
