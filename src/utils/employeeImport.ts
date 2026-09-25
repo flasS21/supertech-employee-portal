@@ -25,10 +25,12 @@ export function parseEmployeeImport(content: string): EmployeeImportResult {
     };
   }
 
-  const employees: Employee[] = [];
+const employees: Employee[] = [];
   const errors: string[] = [];
   const seenEmployeeIds = new Set<string>();
   const seenIds = new Set<string>();
+  const seenEmails = new Set<string>();
+  const seenPhones = new Set<string>();
 
   raw.forEach((entry, index) => {
     const label = `Row ${index + 1}`;
@@ -49,9 +51,23 @@ export function parseEmployeeImport(content: string): EmployeeImportResult {
       errors.push(`${label}: duplicate record id "${result.data.id}" within file`);
       return;
     }
+    if (seenEmails.has(result.data.email)) {
+      errors.push(
+        `${label}: duplicate email "${result.data.email}" within file`,
+      );
+      return;
+    }
+    if (seenPhones.has(result.data.phone)) {
+      errors.push(
+        `${label}: duplicate phone number "${result.data.phone}" within file`,
+      );
+      return;
+    }
 
     seenEmployeeIds.add(result.data.employeeId);
     seenIds.add(result.data.id);
+    seenEmails.add(result.data.email);
+    seenPhones.add(result.data.phone);
     employees.push(result.data);
   });
 
@@ -65,6 +81,14 @@ export function parseEmployeeImport(content: string): EmployeeImportResult {
     }
     if (existing.some((item) => item.id === employee.id)) {
       errors.push(`Record id "${employee.id}" already exists in current data`);
+    }
+    if (existing.some((item) => item.email === employee.email)) {
+      errors.push(`Email "${employee.email}" already exists in current data`);
+    }
+    if (existing.some((item) => item.phone === employee.phone)) {
+      errors.push(
+        `Phone number "${employee.phone}" already exists in current data`,
+      );
     }
   }
 

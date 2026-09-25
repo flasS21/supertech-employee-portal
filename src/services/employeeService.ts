@@ -64,13 +64,38 @@ export function saveEmployees(employees: Employee[]): void {
   });
 }
 
-export function addEmployee(employee: Employee): void {
-  const employees = getEmployees();
-
-  if (employees.some((item) => item.employeeId === employee.employeeId)) {
+function assertUniqueFields(
+  employees: Employee[],
+  candidate: Employee,
+  excludesId?: string,
+): void {
+  if (
+    employees.some(
+      (item) =>
+        item.id !== excludesId && item.employeeId === candidate.employeeId,
+    )
+  ) {
     throw new Error("Employee ID already exists");
   }
+  if (
+    employees.some(
+      (item) => item.id !== excludesId && item.email === candidate.email,
+    )
+  ) {
+    throw new Error("An employee with this email already exists");
+  }
+  if (
+    employees.some(
+      (item) => item.id !== excludesId && item.phone === candidate.phone,
+    )
+  ) {
+    throw new Error("An employee with this phone number already exists");
+  }
+}
 
+export function addEmployee(employee: Employee): void {
+  const employees = getEmployees();
+  assertUniqueFields(employees, employee);
   saveEmployees([...employees, employee]);
 }
 
@@ -85,15 +110,7 @@ export function updateEmployee(updatedEmployee: Employee): void {
     throw new Error("Employee not found");
   }
 
-  const duplicateId = employees.some(
-    (employee) =>
-      employee.employeeId === updatedEmployee.employeeId &&
-      employee.id !== updatedEmployee.id,
-  );
-
-  if (duplicateId) {
-    throw new Error("Employee ID already exists");
-  }
+  assertUniqueFields(employees, updatedEmployee, updatedEmployee.id);
 
   const updatedEmployees = [...employees];
   updatedEmployees[index] = updatedEmployee;
